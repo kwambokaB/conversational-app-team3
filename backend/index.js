@@ -61,11 +61,11 @@ app.listen(PORT, async () => {
 
   bot.start((ctx) => {
     // console.log('srtart', ctx);
-    ctx.reply('Welcome to SkillBuddy Bot! Your learning partner. To get started type in /hello');
+    ctx.reply('Welcome to SkillBuddy Bot! Your learning partner. To get started type in your skillBuddy email address to recieve updates from skillBuddy.');
   });
 
   bot.hears('/hello', (ctx) => {
-    console.log('hello', ctx);
+    // console.log('hello', ctx);
     ctx.reply('Hey there. if this is the first time please reply with your skillBuddy email');
   });
 
@@ -82,7 +82,11 @@ app.listen(PORT, async () => {
 
   bot.help((ctx) => ctx.reply('Send me a sticker'));
   // bot.on(message('sticker'), (ctx) => ctx.reply('👍'));
+  bot.hears('hello', (ctx) => ctx.reply('Hey there'));
   bot.hears('hi', (ctx) => ctx.reply('Hey there'));
+  bot.hears('Hi', (ctx) => ctx.reply('Hey there'));
+  bot.hears('Hello', (ctx) => ctx.reply('Hey there'));
+
   bot.launch();
 
   // Enable graceful stopnumber
