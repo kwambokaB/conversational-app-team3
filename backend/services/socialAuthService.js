@@ -1,62 +1,58 @@
 import axios from 'axios';
 
-const getAccessToken = async (url, data) => {
-  return await axios({
-    url,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    data: {
-      ...data,
-      grant_type: 'authorization_code',
-    },
-  });
-};
+const getAccessToken = async (url, data) => await axios({
+  url,
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  },
+  data: {
+    ...data,
+    grant_type: 'authorization_code',
+  },
+});
 
-const getUserInfo = async (url, access_token) => {
-  return await axios({
-    url,
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
-};
+const getUserInfo = async (url, accessToken) => await axios({
+  url,
+  method: 'GET',
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+  },
+});
 
 module.exports = {
   google: {
-    getAccessToken: async (code, redirect_uri) => {
-      return await getAccessToken(process.env['GOOGLE_ACCESS_TOKEN_URI'], {
-        code,
-        redirect_uri,
-        client_id: process.env['GOOGLE_CLIENT_ID'],
-        client_secret: process.env['GOOGLE_CLIENT_SECRET'],
-      });
-    },
-    getUserInfo: async (access_token) => {
-      return await getUserInfo(process.env['GOOGLE_USER_PROFILE_URI'], access_token);
-    },
+    getAccessToken: async (code, redirectUri) => await getAccessToken(process.env.GOOGLE_ACCESS_TOKEN_URI, {
+      code,
+      redirect_uri: redirectUri,
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      client_secret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+    getUserInfo: async (accessToken) => await getUserInfo(process.env.GOOGLE_USER_PROFILE_URI, accessToken),
   },
   linkedin: {
-    getAccessToken: async (code, redirect_uri) => {
-      return await getAccessToken(process.env['LINKEDIN_ACCESS_TOKEN_URI'], {
-        code,
-        redirect_uri,
-        client_id: process.env['LINKEDIN_CLIENT_ID'],
-        client_secret: process.env['LINKEDIN_CLIENT_SECRET'],
-      });
-    },
-    getUserInfo: async (access_token) => {
-      let email = await getUserInfo(process.env['LINKEDIN_USER_EMAIL_URI'], access_token);
-      if (email?.data?.elements?.length) {
+    getAccessToken: async (code, redirectUri) => await getAccessToken(process.env.LINKEDIN_ACCESS_TOKEN_URI, {
+      code,
+      redirect_uri: redirectUri,
+      client_id: process.env.LINKEDIN_CLIENT_ID,
+      client_secret: process.env.LINKEDIN_CLIENT_SECRET,
+    }),
+    getUserInfo: async (accessToken) => {
+      let email = await getUserInfo(process.env.LINKEDIN_USER_EMAIL_URI, accessToken);
+      if (email.data.elements.length) {
         email = email.data.elements.pop()['handle~'];
       }
-      const userInfo = await getUserInfo(process.env['LINKEDIN_USER_PROFILE_URI'], access_token);
+      const userInfo = await getUserInfo(process.env.LINKEDIN_USER_PROFILE_URI, accessToken);
       const picture = userInfo.data.profilePicture['displayImage~'].elements[0].identifiers[0].identifier;
-      const {localizedFirstName, localizedLastName} = userInfo.data;
-      return { data: { localizedFirstName, localizedLastName, picture, ...email } };
+      const { localizedFirstName, localizedLastName } = userInfo.data;
+      return {
+        data: {
+          localizedFirstName,
+          localizedLastName,
+          picture,
+          ...email,
+        },
+      };
     },
   },
 };
-

@@ -12,7 +12,7 @@ exports.verifyToken = async (req, res, next) => {
   if (!token) {
     return res.status(404).json({
       status: 'error',
-      error: 'User is not Authenticated',
+      error: 'Invalid token!',
     });
   }
   try {
@@ -22,14 +22,14 @@ exports.verifyToken = async (req, res, next) => {
     if (!verified) {
       return res.status(404).json({
         status: 'error',
-        error: 'Invalid or expired token',
+        error: 'Invalid or expired token!',
       });
     }
     return next();
   } catch (err) {
     res.status(404).json({
       status: 'error',
-      message: 'Invalid token',
+      message: 'Invalid token!',
     });
   }
 };
@@ -39,7 +39,7 @@ exports.verifyAuthorUserToken = async (req, res, next) => {
   if (!token) {
     return res.status(404).json({
       status: 'error',
-      error: 'User is not Authenticated',
+      error: 'User is not Authenticated!',
     });
   }
   try {
@@ -48,8 +48,15 @@ exports.verifyAuthorUserToken = async (req, res, next) => {
 
     const response = await db.queryBuilder('SELECT * FROM users WHERE id = $1', [userId]);
     // console.log('response', response.rows);
+    if (response.errors) {
+      return res.status(400).json({
+        error: 'User not found!',
+        status: 'error',
+      });
+    }
+
     const user = response.rows[0];
-    if (user?.role !== 1) {
+    if (user.role !== 1) {
       return res.status(404).json({
         status: 'error',
         error: 'Only course owners can perform this action',
@@ -77,9 +84,15 @@ exports.verifyAdminUserToken = async (req, res, next) => {
     const userId = verified.id;
 
     const response = await db.queryBuilder('SELECT * FROM users WHERE id = $1', [userId]);
+    if (response.errors) {
+      return res.status(400).json({
+        error: 'User not found!',
+        status: 'error',
+      });
+    }
     // console.log('response', response.rows);
     const user = response.rows[0];
-    if (user?.role !== 2) {
+    if (user.role !== 2) {
       return res.status(404).json({
         status: 'error',
         error: 'Only admins perform this action',
