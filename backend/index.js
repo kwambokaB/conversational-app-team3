@@ -54,47 +54,6 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, async () => {
-<<<<<<< HEAD
-  await initializeDb();
-
-  const bot = new Telegraf(process.env.BOT_TOKEN);
-
-  bot.start((ctx) => {
-    // console.log('srtart', ctx);
-    ctx.reply('Welcome to SkillBuddy Bot! Your learning partner. To get started type in your skillBuddy email address to recieve updates from skillBuddy.');
-  });
-
-  bot.hears('/hello', (ctx) => {
-    // console.log('hello', ctx);
-    ctx.reply('Hey there. if this is the first time please reply with your skillBuddy email');
-  });
-
-  bot.email(async (ctx) => {
-    console.log(ctx.update.message);
-    const data = {
-      email: ctx.update.message.text,
-      chat_id: ctx.update.message.chat.id,
-    };
-    const text = await TelegramController.updateUser(data);
-    console.log('text', text);
-    ctx.reply(text);
-  });
-
-  bot.help((ctx) => ctx.reply('Send me a sticker'));
-  // bot.on(message('sticker'), (ctx) => ctx.reply('👍'));
-  bot.hears('hello', (ctx) => ctx.reply('Hey there'));
-  bot.hears('hi', (ctx) => ctx.reply('Hey there'));
-  bot.hears('Hi', (ctx) => ctx.reply('Hey there'));
-  bot.hears('Hello', (ctx) => ctx.reply('Hey there'));
-
-  bot.launch();
-
-  // Enable graceful stopnumber
-  process.once('SIGINT', () => bot.stop('SIGINT'));
-  process.once('SIGTERM', () => bot.stop('SIGTERM'));
-
-  console.log(`Listening on port: ${PORT}`);
-=======
   try {
     await initializeDb();
     await botInit();
@@ -102,7 +61,6 @@ app.listen(PORT, async () => {
   } catch (e) {
     console.log('error', e);
   }
->>>>>>> feat/telegram-intergration-endpoint
 });
 
 export default app;
