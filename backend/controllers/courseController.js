@@ -12,10 +12,6 @@ import Assignment from '../models/assignment';
 import CourseStatus from '../models/courseStatus';
 import Material from '../models/courseMaterial';
 import { ALREADY_ENROLLED, NOT_AUTHORISED, SUCCESS } from '../utils/constants';
-<<<<<<< HEAD
-=======
-
->>>>>>> feat/telegram-intergration-endpoint
 import CourseProgress from '../models/courseProgress';
 import TelegramController from './telegramController';
 
@@ -108,11 +104,7 @@ class CourseController {
 
   static async unEnrollUser(req, res) {
     const _user = await user.getById(req.body.userId);
-<<<<<<< HEAD
     if (_user.errors) return Helpers.dbError(res, _user);
-=======
-    if (_user.errors) return Helpers.dbError(res, _user); // if (_user.row.whatsapp) {
->>>>>>> feat/telegram-intergration-endpoint
 
     const _course = await course.getById(req.params.id);
     if (_course.errors) return Helpers.dbError(res, _course);
