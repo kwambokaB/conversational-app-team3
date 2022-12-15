@@ -2,8 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { Telegraf } from 'telegraf';
 
+import botInit from './services/telegramBot';
 import initializeDb from './db/dbinit';
 import {
   authRoute,
@@ -19,7 +19,6 @@ import {
   lessonRoute,
   lessonContentRoute,
 } from './routes';
-import TelegramController from './controllers/telegramController';
 
 dotenv.config();
 const app = express();
@@ -55,6 +54,7 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, async () => {
+<<<<<<< HEAD
   await initializeDb();
 
   const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -94,6 +94,15 @@ app.listen(PORT, async () => {
   process.once('SIGTERM', () => bot.stop('SIGTERM'));
 
   console.log(`Listening on port: ${PORT}`);
+=======
+  try {
+    await initializeDb();
+    await botInit();
+    console.log(`Listening on port: ${PORT}`);
+  } catch (e) {
+    console.log('error', e);
+  }
+>>>>>>> feat/telegram-intergration-endpoint
 });
 
 export default app;
